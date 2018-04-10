@@ -75,32 +75,26 @@ public class HexMap : MonoBehaviour
             {
                 //North
                 h = HexTile.CreateTile(this.transform, x, -r);
-                h.GetComponentInChildren<Renderer>().sharedMaterial.color = Color.white;
                 Tiles[x, -r] = h;
 
                 //NorthEast
                 h = HexTile.CreateTile(this.transform, r, -r + x);
-                h.GetComponentInChildren<Renderer>().sharedMaterial.color = Color.white;
                 Tiles[r, -r + x] = h;
 
                 //SouthEast
                 h = HexTile.CreateTile(this.transform, r - x, x);
-                h.GetComponentInChildren<Renderer>().sharedMaterial.color = Color.white;
                 Tiles[r - x, x] = h;
 
                 //South
                 h = HexTile.CreateTile(this.transform, -x, r);
-                h.GetComponentInChildren<Renderer>().sharedMaterial.color = Color.white;
                 Tiles[-x, r] = h;
 
                 //SouthWest
                 h = HexTile.CreateTile(this.transform, -r, r - x);
-                h.GetComponentInChildren<Renderer>().sharedMaterial.color = Color.white;
                 Tiles[-r, r - x] = h;
 
                 //NorthWest
                 h = HexTile.CreateTile(this.transform, x - r, -x);
-                h.GetComponentInChildren<Renderer>().sharedMaterial.color = Color.white;
                 Tiles[x - r, -x] = h;
             }
         }

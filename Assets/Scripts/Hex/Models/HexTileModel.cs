@@ -43,7 +43,7 @@ public partial class HexTile
 
     public static GameObject GetPrefab()
     {
-        return Resources.Load("Prefabs/HexUp", typeof(GameObject)) as GameObject;
+        return Resources.Load("Prefabs/HexTile", typeof(GameObject)) as GameObject;
     }
 
     public enum eDirection

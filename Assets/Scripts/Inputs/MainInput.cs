@@ -78,7 +78,7 @@ public class MainInput : MonoBehaviour
 
             if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Tiles"))
             {
-                s = hit.collider.GetComponent<HexTile>();
+                s = hit.collider.GetComponentInParent<HexTile>();
             }
             else if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Pieces"))
             {
