@@ -47,7 +47,9 @@ public partial class HexTile : MonoBehaviour, INotifyPropertyChanged
     public void SetStateChanged()
     {
         Renderer r = GetComponentInChildren<Renderer>();
-        r.sharedMaterial = Materials[(int)State];
+        Material[] m = r.materials; 
+        m[0] = Materials[(int)State];
+        r.materials = m;
     }
 
     public void OnStateChanged(object sender, PropertyChangedEventArgs e)
