@@ -9,7 +9,7 @@ abstract public partial class Footman : Piece
     {
         HexTile.eState state = HexTile.eState.Moveable;
         HexMoveMapParametrs parameters = HexMoveMapParametrs.GetMoveParameters();
-        HexTile.Coordinate[] moveMap = HexTile.RingInRadiusCoordinates(0, 0, 1);
+        HexTile.Coordinate[] moveMap = HexTile.RingInRadiusCoordinates(0, 0, 0, 1);
 
         return new HexMoveMap(state, parameters, moveMap);
     }
@@ -18,7 +18,7 @@ abstract public partial class Footman : Piece
     {
         HexTile.eState state = HexTile.eState.Atackable;
         HexMoveMapParametrs parameters = HexMoveMapParametrs.GetAttackParameters();
-        HexTile.Coordinate[] moveMap = HexTile.RingInRadiusCoordinates(0, 0, 1);
+        HexTile.Coordinate[] moveMap = HexTile.RingInRadiusCoordinates(0, 0, 0, 1);
 
         return new HexMoveMap(state, parameters, moveMap);
     }

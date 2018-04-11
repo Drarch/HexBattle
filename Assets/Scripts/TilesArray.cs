@@ -14,9 +14,9 @@ public class TileArray<T>// : IEnumerator<T>//, IEnumerable<T>
     public int MinY { get; private set; }
     public int MaxY { get; private set; }
     
-    private T[,] list { get; set; }
+    private T[,,] list { get; set; }
 
-    public T this[int keyX, int keyY]
+    public T this[int keyX, int keyY, HexTile.eLevel level]
     {
         get
         {
@@ -24,12 +24,15 @@ public class TileArray<T>// : IEnumerator<T>//, IEnumerable<T>
                 || keyY < MinY || keyY > MaxY)
                 return default(T);
 
-            return list[keyX - MinX, keyY - MinY];
+            int levelIndex = level == HexTile.eLevel.Up ? 0 : 1;
+
+            return list[keyX - MinX, keyY - MinY, levelIndex];
         }
 
         set
         {
-            list[keyX - MinX, keyY - MinY] = value;
+            int levelIndex = level == HexTile.eLevel.Up ? 0 : 1;
+            list[keyX - MinX, keyY - MinY, levelIndex] = value;
         }
     }
 
@@ -42,7 +45,7 @@ public class TileArray<T>// : IEnumerator<T>//, IEnumerable<T>
         MinY = minY;
         MaxY = maxY;
 
-        list = new T[MaxX - MinX + 1, MaxY - MinY + 1];
+        list = new T[MaxX - MinX + 1, MaxY - MinY + 1, 2];
     }
 
     public bool MoveNext()

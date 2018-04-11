@@ -23,15 +23,16 @@ public partial class HexTile : MonoBehaviour, INotifyPropertyChanged
         Neighbors = new HexTile[6];
     }
 
-    public void SetCoordinate(int x, int y)
+    public void SetCoordinate(int x, int y, eLevel level)
     {
         AxialX = x;
         AxialY = y;
+        Level = level;
 
-        WorldX = (HexTile.HexWidth * 0.75f) * x;
-        WorldY = (HexTile.HexHeigth * y) - (HexTile.HexHeigth - ((HexTile.HexHeigth / 2.0f) * x)) + HexTile.HexHeigth;
+        //WorldX = (HexTile.HexWidth * 0.75f) * x;
+        //WorldY = (HexTile.HexHeigth * y) - (HexTile.HexHeigth - ((HexTile.HexHeigth / 2.0f) * x)) + HexTile.HexHeigth;
 
-        this.name = String.Format("{0}, {1}", AxialX, AxialY);
+        this.name = String.Format("{0}, {1}, {2}", AxialX, AxialY, level.ToString());
     }
 
     public void SetNeighbour(HexTile t, eDirection dirc)
@@ -76,25 +77,25 @@ public partial class HexTile : MonoBehaviour, INotifyPropertyChanged
     }
     #endregion
 
-    public static HexTile CreateTile(Transform map, int x, int y)
+    public static HexTile CreateTile(Transform map, int x, int y, eLevel level)
     {
         float offsetX = (HexTile.HexWidth * 0.75f) * x;
         float offsetY = (HexTile.HexHeigth * y) - (HexTile.HexHeigth - ((HexTile.HexHeigth / 2.0f) * x)) + HexTile.HexHeigth;
-
+        float offsetLevel = HexTile.HexThickness * (int)level;
         GameObject prefabHex = HexTile.GetPrefab();
-        //h.transform.parent = this.transform;
 
-        GameObject g = (GameObject)Instantiate(prefabHex, new Vector3(offsetX, 0, offsetY), Quaternion.identity);
+        Quaternion rotation = level == eLevel.Up ? Quaternion.identity : Quaternion.AngleAxis(180.0f, Vector3.right);
+        GameObject g = (GameObject)Instantiate(prefabHex, new Vector3(offsetX, offsetLevel, offsetY), rotation);
 
         g.transform.parent = map;
         HexTile h = g.GetComponent<HexTile>();
         h.InitHexTile();
-        h.SetCoordinate(x, y);
+        h.SetCoordinate(x, y, level);
 
         return h;
     }
 
-    public static Coordinate[] RingInRadiusCoordinates(int baseX, int baseY, int radius)
+    public static Coordinate[] RingInRadiusCoordinates(int baseX, int baseY, eLevel level, int radius)
     {
         List<Coordinate> result = new List<Coordinate>();
 
@@ -103,19 +104,19 @@ public partial class HexTile : MonoBehaviour, INotifyPropertyChanged
             int maxX = baseX + radius, minX = baseX - radius,
                 maxY = baseY + radius, minY = baseY - radius;
 
-            for (int i = minY; i <= baseY; i++) { result.Add(new Coordinate(maxX, i)); }
-            for (int i = baseY; i <= maxY; i++) {result.Add(new Coordinate(minX, i)); }
-            for (int i = minX + 1; i <= baseX; i++) { result.Add(new Coordinate(i, maxY)); }
-            for (int i = baseX; i < maxX; i++) { result.Add(new Coordinate(i, minY)); }
+            for (int i = minY; i <= baseY; i++) { result.Add(new Coordinate(maxX, i, level)); }
+            for (int i = baseY; i <= maxY; i++) {result.Add(new Coordinate(minX, i, level)); }
+            for (int i = minX + 1; i <= baseX; i++) { result.Add(new Coordinate(i, maxY, level)); }
+            for (int i = baseX; i < maxX; i++) { result.Add(new Coordinate(i, minY, level)); }
             for (int i = 1; i <= radius; i++)
             {
-                result.Add(new Coordinate(baseX - i, minY + i));
-                result.Add(new Coordinate(maxX - i, baseY + i));
+                result.Add(new Coordinate(baseX - i, minY + i, level));
+                result.Add(new Coordinate(maxX - i, baseY + i, level));
             }
         }
         else if (radius == 0)
         {
-            result.Add(new Coordinate(baseX, baseY));
+            result.Add(new Coordinate(baseX, baseY, level));
         }
 
         return result.ToArray();
@@ -123,7 +124,7 @@ public partial class HexTile : MonoBehaviour, INotifyPropertyChanged
 
     public Coordinate[] RingInRadiusCoordinates(int radius)
     {
-        return RingInRadiusCoordinates(AxialX, AxialY, radius);
+        return RingInRadiusCoordinates(AxialX, AxialY, this.Level, radius);
     }
 
     public HexTile[] RingInRadius(int radius)
@@ -132,9 +133,9 @@ public partial class HexTile : MonoBehaviour, INotifyPropertyChanged
 
         foreach(Coordinate c in RingInRadiusCoordinates(radius))
         {
-            if(Map.Tiles[c.coordinateX, c.coordinateY] != null)
+            if(Map.Tiles[c.coordinateX, c.coordinateY, this.Level] != null)
             {
-                result.Add(Map.Tiles[c.coordinateX, c.coordinateY]);
+                result.Add(Map.Tiles[c.coordinateX, c.coordinateY, this.Level]);
             }
         }
         
@@ -158,22 +159,22 @@ public partial class HexTile : MonoBehaviour, INotifyPropertyChanged
 
     #region Pieces
 
-    public void SetupPiece(int player, Type piece)
+    public void SetupPiece(int player, Type pieceType)
     {
         ClearPiece();
 
         GameObject pieces = GameObject.Find("Pieces");
 
-        GameObject prefabPiece = Piece.GetPrefab(player, piece);
-        GameObject g = (GameObject)Instantiate(prefabPiece, new Vector3(this.WorldX, 0, this.WorldY), Quaternion.identity);
+        GameObject prefabPiece = Piece.GetPrefab(player, pieceType);
+        GameObject piece = (GameObject)Instantiate(prefabPiece, this.transform.position, this.transform.rotation);
 
         if (pieces != null)
         {
-            g.transform.parent = pieces.transform;
+            piece.transform.parent = pieces.transform;
         }
-
-        this.OcuppiedBy = g.GetComponent<Piece>();
-        Piece p = g.GetComponent<Piece>();
+        
+        this.OcuppiedBy = piece.GetComponent<Piece>();
+        Piece p = piece.GetComponent<Piece>();
 
         if (p != null)
         {

@@ -170,14 +170,14 @@ public class MainInput : MonoBehaviour
             float change = distance / Time.deltaTime;
             float cameraAngle = camera.transform.rotation.eulerAngles.x + change;
 
-            if (cameraAngle < 15)
-            {
-                change = 15 - camera.transform.rotation.eulerAngles.x;
-            }
-            else if (cameraAngle > 87)
-            {
-                change = 87 - camera.transform.rotation.eulerAngles.x;
-            }
+            //if (cameraAngle < 15)
+            //{
+            //    change = 15 - camera.transform.rotation.eulerAngles.x;
+            //}
+            //else if (cameraAngle > 87)
+            //{
+            //    change = 87 - camera.transform.rotation.eulerAngles.x;
+            //}
 
             if (Mathf.Abs(change) > 0.1f)
             {

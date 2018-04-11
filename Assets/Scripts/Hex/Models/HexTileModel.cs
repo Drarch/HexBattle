@@ -10,11 +10,13 @@ public partial class HexTile
     {
         public int coordinateX;
         public int coordinateY;
+        public eLevel level;
 
-        public Coordinate(int x, int y)
+        public Coordinate(int x, int y, eLevel l)
         {
             coordinateX = x;
             coordinateY = y;
+            level = l;
         }
     };
 
@@ -40,6 +42,7 @@ public partial class HexTile
     }
     public static float HexWidth { get { return HexRadius * 2.0f; } }
     public static float HexHeigth { get { return ((float)System.Math.Sqrt(3.0f) / 2.0f) * HexWidth; } }
+    public static float HexThickness { get { return 0.2f; } }
 
     public static GameObject GetPrefab()
     {
@@ -48,43 +51,49 @@ public partial class HexTile
 
     public enum eDirection
     {
-        North = 0
-        , NorthEast
-        , SouthEast
-        , South
-        , SouthWest
-        , NorthWest
+        North = 0,
+        NorthEast,
+        SouthEast,
+        South,
+        SouthWest,
+        NorthWest
     }
 
     public enum eState
     {
-        NotSelected = 0
-        , Selected
-        , Moveable
-        , Atackable
+        NotSelected = 0,
+        Selected,
+        Moveable,
+        Atackable
+    }
+
+    public enum eLevel
+    {
+        Up = 1,
+        Down = -1
     }
 
     public static class PropertyDictionary
     {
         public const string StateProperty = "State";
     }
+    
+    public HexTile[] Neighbors;
 
-    //private GameObject Grid { get; set; }
-
-    public HexTile[] Neighbors;// { get; private set; }
-
-    public Piece OcuppiedBy;// { get; set; }
+    public Piece OcuppiedBy;
     public bool IsOcuppied { get { return OcuppiedBy != null; } }
 
-    public int AxialX;// { get; private set; }
-    public int AxialY;// { get; private set; }
+    public int AxialX;
+    public int AxialY;
 
     public int CubeX { get { return AxialX; } }
     public int CubeY { get { return AxialX - AxialY; } }
     public int CubeZ { get { return AxialY; } }
 
-    public float WorldX;// { get; private set; }
-    public float WorldY;// { get; private set; }
+    public eLevel Level;
+
+    //public float WorldX;
+    //public float WorldY;
 
     private eState state = eState.NotSelected;
     public eState State

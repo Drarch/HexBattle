@@ -24,7 +24,7 @@ public class HexMap : MonoBehaviour
 
         foreach (HexTile t in tiles)
         {
-            Tiles[t.AxialX, t.AxialY] = t;
+            Tiles[t.AxialX, t.AxialY, t.Level] = t;
         }
     }
 
@@ -46,7 +46,8 @@ public class HexMap : MonoBehaviour
         switch (type)
         {
             case MapType.Disc:
-                GenerateDiscMap(width);
+                GenerateDiscMap(width, HexTile.eLevel.Up);
+                GenerateDiscMap(width, HexTile.eLevel.Down);
                 break;
         }
     }
@@ -60,42 +61,42 @@ public class HexMap : MonoBehaviour
         }
     }
 
-    private void GenerateDiscMap(int rings)
+    private void GenerateDiscMap(int rings, HexTile.eLevel level)
     {
         InitializeTileMatrix(-rings, rings, -rings, rings);
 
-        HexTile h = HexTile.CreateTile(this.transform, 0, 0);
+        HexTile h = HexTile.CreateTile(this.transform, 0, 0, level);
         h.GetComponentInChildren<Renderer>().sharedMaterial.color = Color.white;
-        Tiles[0, 0] = h;
-
+        Tiles[0, 0, level] = h;
+        
         for (int r = 1; r <= rings; ++r)
         {
 
             for (int x = 0; x < r; ++x)
             {
                 //North
-                h = HexTile.CreateTile(this.transform, x, -r);
-                Tiles[x, -r] = h;
+                h = HexTile.CreateTile(this.transform, x, -r, level);
+                Tiles[x, -r, level] = h;
 
                 //NorthEast
-                h = HexTile.CreateTile(this.transform, r, -r + x);
-                Tiles[r, -r + x] = h;
+                h = HexTile.CreateTile(this.transform, r, -r + x, level);
+                Tiles[r, -r + x, level] = h;
 
                 //SouthEast
-                h = HexTile.CreateTile(this.transform, r - x, x);
-                Tiles[r - x, x] = h;
+                h = HexTile.CreateTile(this.transform, r - x, x, level);
+                Tiles[r - x, x, level] = h;
 
                 //South
-                h = HexTile.CreateTile(this.transform, -x, r);
-                Tiles[-x, r] = h;
+                h = HexTile.CreateTile(this.transform, -x, r, level);
+                Tiles[-x, r, level] = h;
 
                 //SouthWest
-                h = HexTile.CreateTile(this.transform, -r, r - x);
-                Tiles[-r, r - x] = h;
+                h = HexTile.CreateTile(this.transform, -r, r - x, level);
+                Tiles[-r, r - x, level] = h;
 
                 //NorthWest
-                h = HexTile.CreateTile(this.transform, x - r, -x);
-                Tiles[x - r, -x] = h;
+                h = HexTile.CreateTile(this.transform, x - r, -x, level);
+                Tiles[x - r, -x, level] = h;
             }
         }
 
@@ -107,13 +108,13 @@ public class HexMap : MonoBehaviour
         {
             for (int j = -rings; j <= rings; ++j)
             {
-                h = Tiles[i, j];
+                h = Tiles[i, j, level];
 
                 if (h != null)
                 {
                     foreach (HexTile.eDirection d in Enum.GetValues(typeof(HexTile.eDirection)))
                     {
-                        neighbor = Tiles[i + xNeighbor[(int)d], j + yNeighbor[(int)d]];
+                        neighbor = Tiles[i + xNeighbor[(int)d], j + yNeighbor[(int)d], level];
 
                         h.SetNeighbour(neighbor, d);
                     }
