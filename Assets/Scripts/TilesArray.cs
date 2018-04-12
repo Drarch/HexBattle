@@ -5,15 +5,13 @@ using System.Linq;
 using System.Text;
 
 [Serializable]
-public class TileArray<T>// : IEnumerator<T>//, IEnumerable<T>
+public class TileArray<T> : IEnumerable<T>
 {
-    //private int position = 0;
-
     public int MinX { get; private set; }
     public int MaxX { get; private set; }
     public int MinY { get; private set; }
     public int MaxY { get; private set; }
-    
+
     private T[,,] list { get; set; }
 
     public T this[int keyX, int keyY, HexTile.eLevel level]
@@ -47,19 +45,91 @@ public class TileArray<T>// : IEnumerator<T>//, IEnumerable<T>
 
         list = new T[MaxX - MinX + 1, MaxY - MinY + 1, 2];
     }
+    
+    public IEnumerator<T> GetEnumerator()
+    {
+        return new TilesEnum<T>(list, MaxX - MinX + 1, MaxY - MinY + 1, 2);
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return (IEnumerator<T>)GetEnumerator();
+    }
+}
+
+public class TilesEnum<T> : IEnumerator<T>
+{
+    private int positionX = -1;
+    private int positionY = 0;
+    private int positionLevel = 0;
+
+    private int lengthX;
+    private int lengthY;
+    private int lengthLevel;
+
+    private T[,,] list { get; set; }
+
+    public TilesEnum(T[,,] _list, int _lengthX, int _lengthY, int _lengthLevel)
+    {
+        list = _list;
+        lengthX = _lengthX;
+        lengthY = _lengthY;
+        lengthLevel = _lengthLevel;
+    }
+
+    public T Current
+    {
+        get
+        {
+            try
+            {
+                return list[positionX, positionY, positionLevel];
+            }
+            catch (IndexOutOfRangeException)
+            {
+                throw new InvalidOperationException();
+            }
+        }
+    }
+
+    object IEnumerator.Current
+    {
+        get
+        {
+            return Current;
+        }
+    }
 
     public bool MoveNext()
     {
-        throw new NotImplementedException();
+        //Avoids going beyond the end of the collection.
+        if (++positionX >= lengthX)
+        {
+            if (++positionY >= lengthY)
+            {
+                if (++positionLevel >= lengthLevel)
+                {
+                    return false;
+                }
+
+                positionY = 0;
+            }
+
+            positionX = 0;
+        }
+
+        return true;
     }
 
     public void Reset()
     {
-        throw new NotImplementedException();
+        positionX = -1;
+        positionY = 0;
+        positionLevel = 0;
     }
 
     public void Dispose()
     {
-        throw new NotImplementedException();
+
     }
 }

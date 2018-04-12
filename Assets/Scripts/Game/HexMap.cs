@@ -32,7 +32,10 @@ public class HexMap : MonoBehaviour
 
     private void InitializeTileMatrix(int minX, int maxX, int minY, int maxY)
     {
-        Tiles = new TileArray<HexTile>(minX, maxX, minY, maxY);
+        if (Tiles == null)
+        {
+            Tiles = new TileArray<HexTile>(minX, maxX, minY, maxY);
+        }
     }
 
     #endregion
@@ -48,6 +51,7 @@ public class HexMap : MonoBehaviour
             case MapType.Disc:
                 GenerateDiscMap(width, HexTile.eLevel.Up);
                 GenerateDiscMap(width, HexTile.eLevel.Down);
+                SetDiscMapTilesNeighbourhood(width);
                 break;
         }
     }
@@ -100,24 +104,31 @@ public class HexMap : MonoBehaviour
             }
         }
 
+        
+    }
+
+    private void SetDiscMapTilesNeighbourhood(int rings)
+    {
         int[] xNeighbor = new int[6] { 0, 1, 1, 0, -1, -1 };
         int[] yNeighbor = new int[6] { -1, -1, 0, 1, 1, 0 };
         HexTile neighbor;
 
-        for (int i = -rings; i <= rings; ++i)
+        foreach(HexTile h in Tiles)
         {
-            for (int j = -rings; j <= rings; ++j)
+            if (h != null)
             {
-                h = Tiles[i, j, level];
-
-                if (h != null)
+                foreach (HexTile.eDirection d in Enum.GetValues(typeof(HexTile.eDirection)))
                 {
-                    foreach (HexTile.eDirection d in Enum.GetValues(typeof(HexTile.eDirection)))
-                    {
-                        neighbor = Tiles[i + xNeighbor[(int)d], j + yNeighbor[(int)d], level];
+                    neighbor = Tiles[h.AxialX + xNeighbor[(int)d], h.AxialY + yNeighbor[(int)d], h.Level];
 
-                        h.SetNeighbour(neighbor, d);
-                    }
+                    h.SetNeighbour(neighbor, d);
+                }
+
+                HexTile.eLevel otherSide = h.Level == HexTile.eLevel.Up ? HexTile.eLevel.Down : HexTile.eLevel.Up;
+
+                if (Tiles[h.AxialX, h.AxialY, otherSide] != null)
+                {
+                    h.OtherSide = Tiles[h.AxialX, h.AxialY, otherSide];
                 }
             }
         }

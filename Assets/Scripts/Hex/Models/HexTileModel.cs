@@ -49,6 +49,12 @@ public partial class HexTile
         return Resources.Load("Prefabs/HexTile", typeof(GameObject)) as GameObject;
     }
 
+    public enum eType
+    {
+        Basic = 0,
+        Portal
+    }
+
     public enum eDirection
     {
         North = 0,
@@ -79,6 +85,7 @@ public partial class HexTile
     }
     
     public HexTile[] Neighbors;
+    public HexTile OtherSide;
 
     public Piece OcuppiedBy;
     public bool IsOcuppied { get { return OcuppiedBy != null; } }
@@ -92,8 +99,7 @@ public partial class HexTile
 
     public eLevel Level;
 
-    //public float WorldX;
-    //public float WorldY;
+    public eType Type;
 
     private eState state = eState.NotSelected;
     public eState State

@@ -30,7 +30,17 @@ public class HexTileEditor : Editor
         }
     }
 
-    private int selectedType = 0;
+    private static string[] tileTypeNames;
+    private static string[] TileTypeNames
+    {
+        get
+        {
+            InitStaticFields();
+            return pieceTypeNames;
+        }
+    }
+
+    private int selectedPiece = 0;
     private int player = 1;
 
     public override void OnInspectorGUI()
@@ -44,20 +54,25 @@ public class HexTileEditor : Editor
         EditorGUILayout.EndToggleGroup();
         EditorGUILayout.Separator();
 
-        selectedType = EditorGUILayout.Popup("Piece:", selectedType, PieceTypeNames);
+        EditorGUILayout.LabelField("Setup Type", EditorStyles.boldLabel);
+        EditorGUILayout.EnumPopup("Type", ((HexTile)tiles[0]).Type);
+
+        EditorGUILayout.Separator();
+        EditorGUILayout.LabelField("Setup Piece", EditorStyles.boldLabel);
+        selectedPiece = EditorGUILayout.Popup("Piece:", selectedPiece, PieceTypeNames);
         player = EditorGUILayout.IntSlider("Player:", player, 1, 2);
 
-        if (GUILayout.Button(selectedType == 0 ? "Clear Piece" : "Set Piece"))
+        if (GUILayout.Button(selectedPiece == 0 ? "Clear Piece" : "Set Piece"))
         {
             foreach (HexTile tile in tiles)
             {
-                switch (selectedType)
+                switch (selectedPiece)
                 {
                     case 0:
                         tile.ClearPiece();
                         break;
                     default:
-                        tile.SetupPiece(player, PieceTypes[selectedType - 1]);
+                        tile.SetupPiece(player, PieceTypes[selectedPiece - 1]);
                         break;
                 }
             }

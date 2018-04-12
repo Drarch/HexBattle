@@ -21,6 +21,7 @@ public partial class HexTile : MonoBehaviour, INotifyPropertyChanged
     public void InitHexTile()
     {
         Neighbors = new HexTile[6];
+        Type = eType.Basic;
     }
 
     public void SetCoordinate(int x, int y, eLevel level)
