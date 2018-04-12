@@ -17,7 +17,7 @@ public partial class HexMoveMap
         {
             if (root.Map.Tiles[root.AxialX + c.coordinateX, root.AxialY + c.coordinateY, root.Level] != null)
             {
-                HexTile tile = root.Map.Tiles[root.AxialX + c.coordinateX, root.AxialY + c.coordinateY, root.Level];
+                HexTile tile = (HexTile)root.Map.Tiles[root.AxialX + c.coordinateX, root.AxialY + c.coordinateY, root.Level];
 
                 if (Parameters.MustBeOccupied == tile.IsOcuppied && (Parameters.DifferentPlayers ? tile.OcuppiedBy.Player != player : true))
                 {

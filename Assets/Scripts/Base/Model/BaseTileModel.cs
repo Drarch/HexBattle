@@ -40,10 +40,10 @@ public abstract partial class BaseTile
     public static float ModelHeigth { get { return float.NaN; } }
     public static float ModelThickness { get { return float.NaN; } }
 
-    public HexMap Map
-    {
-        get { return this.GetComponentInParent<HexMap>(); }
-    }
+    public abstract BaseMap<HexTile> Map { get; }
+    //{
+    //    get { return this.GetComponentInParent<BaseMap<BaseTile>>(); }
+    //}
 
     #region Model Fields
 

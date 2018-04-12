@@ -90,7 +90,7 @@ public partial class HexTile : BaseTile
         {
             if(Map.Tiles[c.coordinateX, c.coordinateY, this.Level] != null)
             {
-                result.Add(Map.Tiles[c.coordinateX, c.coordinateY, this.Level]);
+                result.Add((HexTile)Map.Tiles[c.coordinateX, c.coordinateY, this.Level]);
             }
         }
         

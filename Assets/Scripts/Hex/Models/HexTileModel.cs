@@ -35,6 +35,11 @@ public partial class HexTile
     }
     #endregion
 
+    public override BaseMap<HexTile> Map
+    {
+        get { return this.GetComponentInParent<HexMap>(); }
+    }
+
     public int CubeX { get { return AxialX; } }
     public int CubeY { get { return AxialX - AxialY; } }
     public int CubeZ { get { return AxialY; } }
