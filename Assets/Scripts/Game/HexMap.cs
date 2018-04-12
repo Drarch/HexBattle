@@ -4,14 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HexMap : MonoBehaviour
+public class HexMap : BaseMap<HexTile>
 {
-    public Material[] Materials;
-    [SerializeField]
-    public TileArray<HexTile> Tiles { get; private set; }
-    [HideInInspector]
-    public int width = 1;
-
     //Gubi referencję do planszy.
     public void Start()
     {
@@ -30,7 +24,7 @@ public class HexMap : MonoBehaviour
 
     #region Tiles
 
-    private void InitializeTileMatrix(int minX, int maxX, int minY, int maxY)
+    override protected void InitializeTileMatrix(int minX, int maxX, int minY, int maxY)
     {
         if (Tiles == null)
         {
@@ -42,7 +36,7 @@ public class HexMap : MonoBehaviour
 
     #region GenerateMap
         
-    public void GenerateMap(MapType type)
+    override public void GenerateMap(MapType type)
     {
         ClearMap();
 
@@ -56,14 +50,7 @@ public class HexMap : MonoBehaviour
         }
     }
 
-    private void ClearMap()
-    {
-        foreach (HexTile h in this.GetComponentsInChildren<HexTile>())
-        {
-            if (h.IsOcuppied) DestroyImmediate(h.OcuppiedBy.gameObject);
-            DestroyImmediate(h.transform.gameObject);
-        }
-    }
+    #region Disc Map
 
     private void GenerateDiscMap(int rings, HexTile.eLevel level)
     {
@@ -133,6 +120,8 @@ public class HexMap : MonoBehaviour
             }
         }
     }
+
+    #endregion
 
     #endregion
 }

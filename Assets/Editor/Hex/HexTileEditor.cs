@@ -62,6 +62,7 @@ public class HexTileEditor : Editor
         selectedPiece = EditorGUILayout.Popup("Piece:", selectedPiece, PieceTypeNames);
         player = EditorGUILayout.IntSlider("Player:", player, 1, 2);
 
+
         if (GUILayout.Button(selectedPiece == 0 ? "Clear Piece" : "Set Piece"))
         {
             foreach (HexTile tile in tiles)
@@ -77,6 +78,8 @@ public class HexTileEditor : Editor
                 }
             }
         }
+
+
     }
 
     private static void InitStaticFields()
