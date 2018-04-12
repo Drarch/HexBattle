@@ -9,7 +9,7 @@ abstract public partial class Piece
     public int HP { get; protected set; }
     public int MaxHP { get; protected set; }
 
-    public HexTile Tile
+    public BaseTile Tile
     {
         get; set;
     }

@@ -40,7 +40,7 @@ public partial class HexTileMap
     {
         foreach(KeyValuePair<HexTile.eDirection, HexTileMap> h in Map)
         {
-            SelectMap(root.Neighbors[(int)h.Key], h.Value, player);
+            SelectMap((HexTile)root.Neighbors[(int)h.Key], h.Value, player);
         }
     }
 
@@ -50,7 +50,7 @@ public partial class HexTileMap
         {
             foreach (KeyValuePair<HexTile.eDirection, HexTileMap> h in map.Map)
             {
-                SelectMap(tile.Neighbors[(int)h.Key], h.Value, player);
+                SelectMap((HexTile)tile.Neighbors[(int)h.Key], h.Value, player);
             }
 
             HexTile.eState result;

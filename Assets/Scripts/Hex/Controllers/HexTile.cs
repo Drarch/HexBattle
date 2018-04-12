@@ -1,23 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.ComponentModel;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 
 [SelectionBase]
-public partial class HexTile : MonoBehaviour, INotifyPropertyChanged
+public partial class HexTile : BaseTile
 {
-    public void Start()
-    {
-        PropertyChanged += OnStateChanged;
-
-        if(IsOcuppied)
-        {
-            OcuppiedBy.Tile = this;
-        }
-    }
-    
     public void InitHexTile()
     {
         Neighbors = new HexTile[6];
@@ -30,9 +19,6 @@ public partial class HexTile : MonoBehaviour, INotifyPropertyChanged
         AxialY = y;
         Level = level;
 
-        //WorldX = (HexTile.HexWidth * 0.75f) * x;
-        //WorldY = (HexTile.HexHeigth * y) - (HexTile.HexHeigth - ((HexTile.HexHeigth / 2.0f) * x)) + HexTile.HexHeigth;
-
         this.name = String.Format("{0}, {1}, {2}", AxialX, AxialY, level.ToString());
     }
 
@@ -43,46 +29,14 @@ public partial class HexTile : MonoBehaviour, INotifyPropertyChanged
 
     public HexTile GetNeighbour(eDirection dirc)
     {
-        return Neighbors[(int)dirc];
+        return (HexTile)Neighbors[(int)dirc];
     }
-
-    public void SetStateChanged()
-    {
-        Renderer r = GetComponentInChildren<Renderer>();
-        Material[] m = r.materials; 
-        m[0] = Materials[(int)State];
-        r.materials = m;
-    }
-
-    public void OnStateChanged(object sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName.Equals(PropertyDictionary.StateProperty))
-        {
-            SetStateChanged();
-        }
-    }
-
-    #region INotifyPropertyChanged
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    protected void OnPropertyChanged(PropertyChangedEventArgs e)
-    {
-        PropertyChangedEventHandler handler = PropertyChanged;
-        if (handler != null)
-            handler(this, e);
-    }
-
-    protected void OnPropertyChanged(string propertyName)
-    {
-        OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-    }
-    #endregion
 
     public static HexTile CreateTile(Transform map, int x, int y, eLevel level)
     {
-        float offsetX = (HexTile.HexWidth * 0.75f) * x;
-        float offsetY = (HexTile.HexHeigth * y) - (HexTile.HexHeigth - ((HexTile.HexHeigth / 2.0f) * x)) + HexTile.HexHeigth;
-        float offsetLevel = HexTile.HexThickness * (int)level;
+        float offsetX = (HexTile.ModelWidth * 0.75f) * x;
+        float offsetY = (HexTile.ModelHeigth * y) - (HexTile.ModelHeigth - ((HexTile.ModelHeigth / 2.0f) * x)) + HexTile.ModelHeigth;
+        float offsetLevel = HexTile.ModelThickness * (int)level;
         GameObject prefabHex = HexTile.GetPrefab();
 
         Quaternion rotation = level == eLevel.Up ? Quaternion.identity : Quaternion.AngleAxis(180.0f, Vector3.right);
@@ -157,41 +111,4 @@ public partial class HexTile : MonoBehaviour, INotifyPropertyChanged
 
         return result.ToArray();
     }
-
-    #region Pieces
-
-    public void SetupPiece(int player, Type pieceType)
-    {
-        ClearPiece();
-
-        GameObject pieces = GameObject.Find("Pieces");
-
-        GameObject prefabPiece = Piece.GetPrefab(player, pieceType);
-        GameObject piece = (GameObject)Instantiate(prefabPiece, this.transform.position, this.transform.rotation);
-
-        if (pieces != null)
-        {
-            piece.transform.parent = pieces.transform;
-        }
-        
-        this.OcuppiedBy = piece.GetComponent<Piece>();
-        Piece p = piece.GetComponent<Piece>();
-
-        if (p != null)
-        {
-            p.Tile = this;
-            p.Player = player;
-        }
-    }
-
-    public void ClearPiece()
-    {
-        if(this.IsOcuppied)
-        {
-            DestroyImmediate(this.OcuppiedBy.gameObject);
-            this.OcuppiedBy = null;
-        }
-    }
-
-    #endregion
 }

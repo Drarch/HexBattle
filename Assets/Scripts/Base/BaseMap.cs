@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class BaseMap<T> : MonoBehaviour
-    where T : HexTile
+    where T : BaseTile
 {
     public Material[] Materials;
     [SerializeField]

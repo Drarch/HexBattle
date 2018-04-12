@@ -26,7 +26,7 @@ public class HexMap : BaseMap<HexTile>
 
     override protected void InitializeTileMatrix(int minX, int maxX, int minY, int maxY)
     {
-        if (Tiles == null)
+        if (Tiles == null || Tiles.MinX != minX)
         {
             Tiles = new TileArray<HexTile>(minX, maxX, minY, maxY);
         }

@@ -27,9 +27,9 @@ public abstract partial class Piece : MonoBehaviour
         return Resources.Load(prefabName, typeof(GameObject)) as GameObject; ;
     }
 
-    public void SelectMap(HexTile root)
+    public void SelectMap(BaseTile root)
     {
-        MoveMap.SelectMap(root, Player);
-        AttackMap.SelectMap(root, Player);
+        MoveMap.SelectMap((HexTile)root, Player);
+        AttackMap.SelectMap((HexTile)root, Player);
     }
 }

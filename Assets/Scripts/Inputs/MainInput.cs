@@ -6,7 +6,7 @@ using System.Linq;
 
 public class MainInput : MonoBehaviour
 {
-    protected HexTile selected;
+    protected BaseTile selected;
     protected Vector3 PointerLastPosition;
 
     void Start()
@@ -74,7 +74,7 @@ public class MainInput : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit))
         {
-            HexTile s = null;
+            BaseTile s = null;
 
             if(hit.collider.gameObject.layer == LayerMask.NameToLayer("Tiles"))
             {
@@ -128,12 +128,12 @@ public class MainInput : MonoBehaviour
         }
     }
 
-    protected void SelectTile(HexTile tile)
+    protected void SelectTile(BaseTile tile)
     {
         ClearSelection();
 
         tile.OcuppiedBy.SelectMap(tile);
-        tile.State = HexTile.eState.Selected;
+        tile.State = BaseTile.eState.Selected;
         selected = tile;
     }
 

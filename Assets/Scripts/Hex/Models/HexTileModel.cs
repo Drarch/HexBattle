@@ -4,57 +4,7 @@ using System.Collections.Generic;
 
 public partial class HexTile
 {
-    //public double CenterX { get; set; }
-    //public double CenterY { get; set; }
-    public struct Coordinate
-    {
-        public int coordinateX;
-        public int coordinateY;
-        public eLevel level;
-
-        public Coordinate(int x, int y, eLevel l)
-        {
-            coordinateX = x;
-            coordinateY = y;
-            level = l;
-        }
-    };
-
-    public HexMap Map
-    {
-        get { return this.GetComponentInParent<HexMap>(); }
-    }
-
-    private Material[] Materials
-    {
-        get
-        {
-            return Map.Materials;
-        }
-    }
-
-    public static float hexRadius = 1.0f;
-
-    public static float HexRadius
-    {
-        get { return hexRadius; }
-        set { hexRadius = value; }
-    }
-    public static float HexWidth { get { return HexRadius * 2.0f; } }
-    public static float HexHeigth { get { return ((float)System.Math.Sqrt(3.0f) / 2.0f) * HexWidth; } }
-    public static float HexThickness { get { return 0.2f; } }
-
-    public static GameObject GetPrefab()
-    {
-        return Resources.Load("Prefabs/HexTile", typeof(GameObject)) as GameObject;
-    }
-
-    public enum eType
-    {
-        Basic = 0,
-        Portal
-    }
-
+    #region Enums
     public enum eDirection
     {
         North = 0,
@@ -64,54 +14,28 @@ public partial class HexTile
         SouthWest,
         NorthWest
     }
+    #endregion
 
-    public enum eState
+    #region Model Fields
+    public static float hexRadius = 1.0f;
+
+    public static float HexRadius
     {
-        NotSelected = 0,
-        Selected,
-        Moveable,
-        Atackable
+        get { return hexRadius; }
+        set { hexRadius = value; }
     }
 
-    public enum eLevel
+    public new static float ModelWidth { get { return HexRadius * 2.0f; } }
+    public new static float ModelHeigth { get { return ((float)System.Math.Sqrt(3.0f) / 2.0f) * ModelWidth; } }
+    public new static float ModelThickness { get { return 0.2f; } }
+
+    public new static GameObject GetPrefab()
     {
-        Up = 1,
-        Down = -1
+        return Resources.Load("Prefabs/HexTile", typeof(GameObject)) as GameObject;
     }
-
-    public static class PropertyDictionary
-    {
-        public const string StateProperty = "State";
-    }
-    
-    public HexTile[] Neighbors;
-    public HexTile OtherSide;
-
-    public Piece OcuppiedBy;
-    public bool IsOcuppied { get { return OcuppiedBy != null; } }
-
-    public int AxialX;
-    public int AxialY;
+    #endregion
 
     public int CubeX { get { return AxialX; } }
     public int CubeY { get { return AxialX - AxialY; } }
     public int CubeZ { get { return AxialY; } }
-
-    public eLevel Level;
-
-    public eType Type;
-
-    private eState state = eState.NotSelected;
-    public eState State
-    {
-        get { return state; }
-        set
-        {
-            if (value != state)
-            {
-                state = value;
-                OnPropertyChanged(PropertyDictionary.StateProperty);
-            }
-        }
-    }
 }
