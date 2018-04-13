@@ -22,23 +22,4 @@ abstract public partial class Footman : Piece
 
         return new HexMoveMap(state, parameters, moveMap);
     }
-
-    protected override HexTileMap GenerateMovePattern()
-    {
-        Dictionary<HexTile.eState, HexMoveMapParametrs> states = new Dictionary<HexTile.eState, HexMoveMapParametrs>();
-
-        states.Add(HexTile.eState.Moveable, new HexMoveMapParametrs() { DifferentPlayers = false, JumpOver = false, MustBeOccupied = false });
-        states.Add(HexTile.eState.Atackable, new HexMoveMapParametrs() { DifferentPlayers = true, JumpOver = false, MustBeOccupied = true });
-
-        HexTileMap result = new HexTileMap(states);
-
-        result.AddTile(HexTile.eDirection.North);
-        result.AddTile(HexTile.eDirection.NorthEast);
-        result.AddTile(HexTile.eDirection.NorthWest);
-        result.AddTile(HexTile.eDirection.South);
-        result.AddTile(HexTile.eDirection.SouthEast);
-        result.AddTile(HexTile.eDirection.SouthWest);
-
-        return result;
-    }
 }

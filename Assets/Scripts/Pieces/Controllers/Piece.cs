@@ -8,7 +8,6 @@ using UnityEngine;
 [SelectionBase]
 public abstract partial class Piece : MonoBehaviour
 {
-    protected abstract HexTileMap GenerateMovePattern();
     protected abstract HexMoveMap GenerateMoveMap();
     protected abstract HexMoveMap GenerateAttackMap();
     
