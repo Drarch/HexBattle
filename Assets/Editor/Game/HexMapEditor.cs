@@ -21,7 +21,11 @@ public class HexMapEditor : Editor
         switch (type)
         {
             case MapType.Disc:
-                map.width = EditorGUILayout.IntSlider(new GUIContent("Radius:"), map.width, 0, 16);
+                map.Width = EditorGUILayout.IntSlider(new GUIContent("Radius:"), map.Width, 0, 16);
+                break;
+            case MapType.Ring:
+                map.Width = EditorGUILayout.IntSlider(new GUIContent("Radius:"), map.Width, 0, 16);
+                map.RingMin = EditorGUILayout.IntSlider(new GUIContent("Hole Radius:"), map.RingMin, 0, 16);
                 break;
         }
 

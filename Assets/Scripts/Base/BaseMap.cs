@@ -9,7 +9,7 @@ public abstract class BaseMap<T> : MonoBehaviour
     [SerializeField]
     public TileArray<T> Tiles { get; protected set; }
     [HideInInspector]
-    public int width = 1;
+    public int Width { get; set; } = 1;
 
     protected abstract void InitializeTileMatrix(int minX, int maxX, int minY, int maxY);
 
